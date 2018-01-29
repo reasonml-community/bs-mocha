@@ -1,60 +1,86 @@
-type mocha;
-type done_callback = Js.Nullable.t(Js.Exn.t) => unit;
+type mocha
+ and done_callback = Js.Nullable.t(Js.Exn.t) => unit
+ and test_fn('arg, 'result) = (~description:string=?, [@bs.this] (mocha, 'arg) => 'result) => unit;
+
+/* Type signatures for nicer API functions  */
+module Test = {
+  type fn('arg, 'result) = 
+    (string, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
+
+  and hook('arg, 'result) = 
+    (~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
+};
 
 /* Mocha bindings on `this` for `describe` and `it` functions */
 module This = {
-  [@bs.send] external timeout: (mocha, int) => unit = "timeout";
-  [@bs.send] external retries: (mocha, int) => unit = "retries";
-  [@bs.send] external slow: (mocha, int) => unit = "slow";
-  [@bs.send] external skip: (mocha, unit) => unit = "skip";
+  [@bs.send] external timeout: (mocha,  int) => unit = "timeout";
+  [@bs.send] external retries: (mocha,  int) => unit = "retries";
+  [@bs.send] external slow:    (mocha,  int) => unit = "slow";
+  [@bs.send] external skip:    (mocha, unit) => unit = "skip";
 };
 
 module Sync = {
   [@bs.val]
-  external describe: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "describe";
+  external describe:      (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "describe";
   [@bs.val]
-  external it: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "it";
+  external describe_only: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "describe.only";
   [@bs.val]
-  external before: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "before";
+  external describe_skip: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "describe.skip";
   [@bs.val]
-  external after: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "after";
+  external it:            (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "it";
   [@bs.val]
-  external before_each: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "beforeEach";
+  external it_only:       (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "it.only";
   [@bs.val]
-  external after_each: (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "afterEach";
+  external it_skip:       (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "it.skip";
+  [@bs.val]
+  external before:        (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "before";
+  [@bs.val]
+  external after:         (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "after";
+  [@bs.val]
+  external before_each:   (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "beforeEach";
+  [@bs.val]
+  external after_each:    (~description:string=?, [@bs.this] (mocha, unit) => unit) => unit = "afterEach";
 };
 
 module Async = {
   [@bs.val]
-  external it: (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "it";
+  external it:          (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "it";
   [@bs.val]
-  external before: (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "before";
+  external it_only:     (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "it.only";
   [@bs.val]
-  external after: (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "after";
+  external it_skip:     (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "it.skip";
+  [@bs.val]
+  external before:      (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "before";
+  [@bs.val]
+  external after:       (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "after";
   [@bs.val]
   external before_each: (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "beforeEach";
   [@bs.val]
-  external after_each: (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "afterEach";
+  external after_each:  (~description:string=?, [@bs.this] (mocha, done_callback) => unit) => unit = "afterEach";
 };
 
 module Promise = {
   [@bs.val]
-  external it: (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "it";
+  external it:          (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "it";
   [@bs.val]
-  external before: (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "before";
+  external it_only:     (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "it.only";
   [@bs.val]
-  external after: (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "after";
+  external it_skip:     (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "it.skip";
+  [@bs.val]
+  external before:      (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "before";
+  [@bs.val]
+  external after:       (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "after";
   [@bs.val]
   external before_each: (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "beforeEach";
   [@bs.val]
-  external after_each: (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "afterEach";
+  external after_each:  (~description:string=?, [@bs.this] (mocha, unit) => Js.Promise.t('a)) => unit = "afterEach";
 };
 
 /* Constructs a function that can take the options that are normally set with `this` in mocha */
 module With_Options = {
   let make:
-    ( ((~description:string=?, [@bs.this] (mocha, 'a) => 'b) => unit),
-      ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?, 'a => 'b
+    ( test_fn(unit, 'result)
+    , ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?, unit => 'result
     ) => unit =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>
       fn(~description=?, [@bs.this] (this, ()) => {
@@ -65,8 +91,8 @@ module With_Options = {
       });
 
   let make':
-    ( ((~description:string=?, [@bs.this] (mocha, 'a) => 'b) => unit)
-    ,  ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?
+    ( test_fn(done_callback, unit)
+    , ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?
     , ((~error:Js.Exn.t=?, unit) => unit) => unit
     ) => unit =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>

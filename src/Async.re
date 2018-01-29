@@ -1,29 +1,11 @@
-let it:
-  ( string, ~timeout:int=?, ~retries:int=?, ~slow:int=?
-  , ((~error:Js.Exn.t=?, unit) => unit) => unit
-  ) => unit
-  = description => Internal.With_Options.make'(Internal.Async.it, ~description)
+type test_fn = Internal.Test.fn  (((~error:Js.Exn.t=?, unit) => unit), unit)
+ and hook    = Internal.Test.hook(((~error:Js.Exn.t=?, unit) => unit), unit);
 
-and before:
-  ( ~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?
-  , ((~error:Js.Exn.t=?, unit) => unit) => unit
-  ) => unit
-  = Internal.With_Options.make'(Internal.Async.before)
+let it:      test_fn = description => Internal.With_Options.make'(Internal.Async.it,      ~description)
+and it_only: test_fn = description => Internal.With_Options.make'(Internal.Async.it_only, ~description)
+and it_skip: test_fn = description => Internal.With_Options.make'(Internal.Async.it_skip, ~description)
 
-and after:
-  ( ~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?
-  , ((~error:Js.Exn.t=?, unit) => unit) => unit
-  ) => unit
-  = Internal.With_Options.make'(Internal.Async.after)
-
-and before_each:
-  ( ~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?
-  , ((~error:Js.Exn.t=?, unit) => unit) => unit
-  ) => unit
-  = Internal.With_Options.make'(Internal.Async.before_each)
-
-and after_each:
-  ( ~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?
-  , ((~error:Js.Exn.t=?, unit) => unit) => unit
-  ) => unit
-  = Internal.With_Options.make'(Internal.Async.after_each)
+and before:      hook = Internal.With_Options.make'(Internal.Async.before)
+and after:       hook = Internal.With_Options.make'(Internal.Async.after)
+and before_each: hook = Internal.With_Options.make'(Internal.Async.before_each)
+and after_each:  hook = Internal.With_Options.make'(Internal.Async.after_each)
