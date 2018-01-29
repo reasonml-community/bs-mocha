@@ -1,5 +1,5 @@
-type test_fn = Internal.Test.fn  (unit, unit)
- and hook    = Internal.Test.hook(unit, unit);
+type test_fn = Internal.Fn_Type.test(unit, unit)
+ and hook    = Internal.Fn_Type.fn  (unit, unit);
 
 let describe:      test_fn = description => Internal.With_Options.make(Internal.Sync.describe,      ~description)
 and describe_only: test_fn = description => Internal.With_Options.make(Internal.Sync.describe_only, ~description)

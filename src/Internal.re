@@ -2,13 +2,18 @@ type mocha
  and done_callback = Js.Nullable.t(Js.Exn.t) => unit
  and test_fn('arg, 'result) = (~description:string=?, [@bs.this] (mocha, 'arg) => 'result) => unit;
 
-/* Type signatures for nicer API functions  */
-module Test = {
-  type fn('arg, 'result) = 
-    (string, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
+module Fn_Type = {
+  /* Internal representation of mocha test functions */
+  type internal('arg, 'result) =
+    (~description:string=?, [@bs.this] (mocha, 'arg) => 'result) => unit
 
-  and hook('arg, 'result) = 
+  /* Nicer representation of mocha test functions */
+  and fn('arg, 'result) = 
     (~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
+
+  /* For `describe` and `it`, which require a mandatory description */
+  and test('arg, 'result) = 
+    (string, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
 };
 
 /* Mocha bindings on `this` for `describe` and `it` functions */
@@ -78,10 +83,7 @@ module Promise = {
 
 /* Constructs a function that can take the options that are normally set with `this` in mocha */
 module With_Options = {
-  let make:
-    ( test_fn(unit, 'result)
-    , ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?, unit => 'result
-    ) => unit =
+  let make: Fn_Type.internal(unit, 'result) => Fn_Type.fn(unit, 'result) =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>
       fn(~description=?, [@bs.this] (this, ()) => {
         switch timeout { | Some(milliseconds) => This.timeout(this, milliseconds) | None => () };
@@ -90,11 +92,7 @@ module With_Options = {
         done_callback()
       });
 
-  let make':
-    ( test_fn(done_callback, unit)
-    , ~description:string=?, ~timeout: int=?, ~retries: int=?, ~slow: int=?
-    , ((~error:Js.Exn.t=?, unit) => unit) => unit
-    ) => unit =
+  let make': Fn_Type.internal(done_callback, unit) => Fn_Type.fn((~error:Js.Exn.t=?, unit) => unit, unit) =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>
       fn(~description=?, [@bs.this] (this, done_callback') => {
         switch timeout { | Some(milliseconds) => This.timeout(this, milliseconds) | None => () };

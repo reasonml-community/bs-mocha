@@ -1,5 +1,5 @@
-type test_fn('a) = Internal.Test.fn  (unit, Js.Promise.t('a))
- and hook('a)    = Internal.Test.hook(unit, Js.Promise.t('a));
+type test_fn('a) = Internal.Fn_Type.test(unit, Js.Promise.t('a))
+ and hook('a)    = Internal.Fn_Type.fn  (unit, Js.Promise.t('a));
 
 let it:      test_fn('a) = description => Internal.With_Options.make(Internal.Promise.it,      ~description)
 and it_only: test_fn('a) = description => Internal.With_Options.make(Internal.Promise.it_only, ~description)
