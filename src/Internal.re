@@ -8,11 +8,11 @@ module Fn_Type = {
     (~description:string=?, [@bs.this] (mocha, 'arg) => 'result) => unit
 
   /* Nicer representation of mocha test functions */
-  and fn('arg, 'result) = 
+  and fn('arg, 'result) =
     (~description:string=?, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
 
   /* For `describe` and `it`, which require a mandatory description */
-  and test('arg, 'result) = 
+  and test('arg, 'result) =
     (string, ~timeout:int=?, ~retries:int=?, ~slow:int=?, 'arg => 'result) => unit
 };
 
@@ -85,7 +85,7 @@ module Promise = {
 module With_Options = {
   let make: Fn_Type.internal(unit, 'result) => Fn_Type.fn(unit, 'result) =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>
-      fn(~description=?, [@bs.this] (this, ()) => {
+      fn(~description?, [@bs.this] (this, ()) => {
         switch timeout { | Some(milliseconds) => This.timeout(this, milliseconds) | None => () };
         switch retries { | Some(max_retries)  => This.retries(this,  max_retries) | None => () };
         switch slow    { | Some(milliseconds) => This.slow   (this, milliseconds) | None => () };
@@ -94,12 +94,12 @@ module With_Options = {
 
   let make': Fn_Type.internal(done_callback, unit) => Fn_Type.fn((~error:Js.Exn.t=?, unit) => unit, unit) =
     (fn, ~description=?, ~timeout=?, ~retries=?, ~slow=?, done_callback) =>
-      fn(~description=?, [@bs.this] (this, done_callback') => {
+      fn(~description?, [@bs.this] (this, done_callback') => {
         switch timeout { | Some(milliseconds) => This.timeout(this, milliseconds) | None => () };
         switch retries { | Some(max_retries)  => This.retries(this,  max_retries) | None => () };
         switch slow    { | Some(milliseconds) => This.slow   (this, milliseconds) | None => () };
 
-        let done_fn = (~error=?, ()) => done_callback'(Js.Nullable.from_opt(error));
+        let done_fn = (~error=?, ()) => done_callback'(Js.Nullable.fromOption(error));
         done_callback(done_fn);
       });
 };

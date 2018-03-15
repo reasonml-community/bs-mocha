@@ -27,26 +27,26 @@ module Labels = {
     unit = "fail";
 };
 
-let equal     = (~message=?, actual, expected) => Labels.equal    (~actual, ~expected, ~message=?)
-and not_equal = (~message=?, actual, expected) => Labels.not_equal(~actual, ~expected, ~message=?);
+let equal     = (~message=?, actual, expected) => Labels.equal    (~actual, ~expected, ~message?)
+and not_equal = (~message=?, actual, expected) => Labels.not_equal(~actual, ~expected, ~message?);
 
-let deep_equal     = (~message=?, actual, expected) => Labels.deep_equal    (~actual, ~expected, ~message=?)
-and not_deep_equal = (~message=?, actual, expected) => Labels.not_deep_equal(~actual, ~expected, ~message=?);
+let deep_equal     = (~message=?, actual, expected) => Labels.deep_equal    (~actual, ~expected, ~message?)
+and not_deep_equal = (~message=?, actual, expected) => Labels.not_deep_equal(~actual, ~expected, ~message?);
 
 let deep_strict_equal =
-  (~message=?, actual, expected) => Labels.deep_strict_equal    (~actual, ~expected, ~message=?)
+  (~message=?, actual, expected) => Labels.deep_strict_equal    (~actual, ~expected, ~message?)
 and not_deep_strict_equal =
-  (~message=?, actual, expected) => Labels.not_deep_strict_equal(~actual, ~expected, ~message=?);
+  (~message=?, actual, expected) => Labels.not_deep_strict_equal(~actual, ~expected, ~message?);
 
-let strict_equal     = (~message=?, actual, expected) => Labels.strict_equal    (~actual, ~expected, ~message=?)
-and not_strict_equal = (~message=?, actual, expected) => Labels.not_strict_equal(~actual, ~expected, ~message=?);
+let strict_equal     = (~message=?, actual, expected) => Labels.strict_equal    (~actual, ~expected, ~message?)
+and not_strict_equal = (~message=?, actual, expected) => Labels.not_strict_equal(~actual, ~expected, ~message?);
 
 let if_error = value => Labels.if_error(~value);
 
 let ok    = value => Labels.ok(~value)
 and fail  = message => Labels.fail(~message)
 and fail' = (~message=?, ~operator=?, ~stack_start_fn=?, actual, expected) =>
-  Labels.fail'(~actual, ~expected, ~message=?, ~operator=?, ~stack_start_fn=?);
+  Labels.fail'(~actual, ~expected, ~message?, ~operator?, ~stack_start_fn?);
 
-let throws         = (~message=?, block, error) => Labels.throws        (~block, ~error, ~message=?)
-and does_not_throw = (~message=?, block, error) => Labels.does_not_throw(~block, ~error, ~message=?);
+let throws         = (~message=?, block, error) => Labels.throws        (~block, ~error, ~message?)
+and does_not_throw = (~message=?, block, error) => Labels.does_not_throw(~block, ~error, ~message?);

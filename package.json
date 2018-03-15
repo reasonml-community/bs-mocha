@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "bsb -clean-world",
     "build": "bsb -make-world",
-    "watch": "bsb -make-world -w",
+    "start": "bsb -make-world -w",
     "test": "./node_modules/.bin/mocha lib/js/test/Test_*"
   },
   "homepage": "https://github.com/reasonml-community/bs-mocha",
@@ -24,7 +24,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^2.1.0"
+    "bs-platform": "^2.2.2"
   },
   "dependencies": {
     "mocha": "^5.0.0"

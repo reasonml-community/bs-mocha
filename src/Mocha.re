@@ -9,7 +9,7 @@ and it:      test_fn = description => Internal.With_Options.make(Internal.Sync.i
 and it_only: test_fn = description => Internal.With_Options.make(Internal.Sync.it_only, ~description)
 and it_skip: test_fn = description => Internal.With_Options.make(Internal.Sync.it_skip, ~description)
 
-and before:      hook = (~description=?) => Internal.With_Options.make(Internal.Sync.before,      ~description=?)
-and after:       hook = (~description=?) => Internal.With_Options.make(Internal.Sync.after,       ~description=?)
-and before_each: hook = (~description=?) => Internal.With_Options.make(Internal.Sync.before_each, ~description=?)
-and after_each:  hook = (~description=?) => Internal.With_Options.make(Internal.Sync.after_each,  ~description=?)
+and before:      hook = (~description=?) => Internal.With_Options.make(Internal.Sync.before,      ~description?)
+and after:       hook = (~description=?) => Internal.With_Options.make(Internal.Sync.after,       ~description?)
+and before_each: hook = (~description=?) => Internal.With_Options.make(Internal.Sync.before_each, ~description?)
+and after_each:  hook = (~description=?) => Internal.With_Options.make(Internal.Sync.after_each,  ~description?)
