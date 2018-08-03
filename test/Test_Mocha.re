@@ -71,7 +71,7 @@ describe("Mocha", () => {
       for (x in 1 to 100000) {
         result := result^ + x
       };
-      Assert.ok(result^ > 1 |> Js.Boolean.to_js_boolean);
+      Assert.ok(result^ > 1);
     });
   });
 
@@ -79,12 +79,12 @@ describe("Mocha", () => {
     let retry_count = ref(0);
     it("should succeed", ~retries=2, () => {
       retry_count := retry_count^ + 1;
-      Assert.ok(retry_count^ == 1 |> Js.Boolean.to_js_boolean);
+      Assert.ok(retry_count^ == 1);
     });
 
     it_skip("should fail", ~retries=3, () => {
       retry_count := retry_count^ + 1;
-      Assert.ok(retry_count^ == 6 |> Js.Boolean.to_js_boolean);
+      Assert.ok(retry_count^ == 6);
     });
   });
 
@@ -94,7 +94,7 @@ describe("Mocha", () => {
       for (x in 1 to 100000) {
         result := result^ + x
       };
-      Assert.ok(result^ > 1 |> Js.Boolean.to_js_boolean);
+      Assert.ok(result^ > 1);
     })
   });
 })

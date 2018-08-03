@@ -84,13 +84,13 @@ describe("Async", () => {
     let retry_count = ref(0);
     it("should succeed", ~retries=2, done_ => {
       retry_count := retry_count^ + 1;
-      Assert.ok(retry_count^ == 1 |> Js.Boolean.to_js_boolean);
+      Assert.ok(retry_count^ == 1);
       done_()
     });
 
     it_skip("should fail", ~retries=3, done_ => {
       retry_count := retry_count^ + 1;
-      Assert.ok(retry_count^ == 6 |> Js.Boolean.to_js_boolean);
+      Assert.ok(retry_count^ == 6);
       done_()
     });
   });

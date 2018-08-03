@@ -95,7 +95,7 @@ describe("Promise", () => {
     it("should succeed", ~retries=2, () => {
       Js.Promise.make((~resolve, ~reject as _) => {
         retry_count := retry_count^ + 1;
-        Assert.ok(retry_count^ == 1 |> Js.Boolean.to_js_boolean);
+        Assert.ok(retry_count^ == 1);
         [@bs] resolve(true) 
       });
     });
@@ -103,7 +103,7 @@ describe("Promise", () => {
     it_skip("should fail", ~retries=3, () => {
       Js.Promise.make((~resolve, ~reject as _) => {
         retry_count := retry_count^ + 1;
-        Assert.ok(retry_count^ == 6 |> Js.Boolean.to_js_boolean);
+        Assert.ok(retry_count^ == 6);
         [@bs] resolve(true) 
       });
     });
