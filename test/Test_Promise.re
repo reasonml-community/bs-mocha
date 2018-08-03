@@ -4,116 +4,153 @@ open Promise;
 exception RejectedError(string);
 
 describe("Promise", () => {
-  let empty = () => 
-    Js.Promise.make((~resolve, ~reject as _) => [@bs] resolve(true));
+  let empty = () =>
+    Js.Promise.make((~resolve, ~reject as _) => resolve(. true));
 
   /* Calls given function after a small delay */
   let delay = fn =>
-    Js.Promise.make((~resolve, ~reject as _) => {
-      Js.Global.setTimeout(() => { fn(); [@bs] resolve(true) }, 300) |> ignore;
-    });
+    Js.Promise.make((~resolve, ~reject as _) =>
+      Js.Global.setTimeout(
+        () => {
+          fn();
+          resolve(. true);
+        },
+        300,
+      )
+      |> ignore
+    );
 
   /* Rejects the promise after a small delay */
-  let delay_reject = () => 
-    Js.Promise.make((~resolve as _, ~reject) => {
-      Js.Global.setTimeout(() => [@bs] reject(RejectedError("promise successfully rejected")), 300) |> ignore;
-    });
+  let delay_reject = () =>
+    Js.Promise.make((~resolve as _, ~reject) =>
+      Js.Global.setTimeout(
+        () => reject(. RejectedError("promise successfully rejected")),
+        300,
+      )
+      |> ignore
+    );
 
-  describe("Success", () => {
-    it("should be successful", () => {
+  describe("Success", () =>
+    it("should be successful", () =>
       delay(() => Assert.equal(3, 3))
-    })
-  });
+    )
+  );
 
-  describe_skip("Error", () => {
-    it("should error out", () => {
-      delay_reject()
-    })
-  });
+  describe_skip("Error", () => it("should error out", () =>
+                                 delay_reject()
+                               ));
 
   describe("Hooks", () => {
-    let hooks = ref({"before": false, "before_each": 0, "after": false, "after_each": 0 });
+    let hooks =
+      ref({
+        "before": false,
+        "before_each": 0,
+        "after": false,
+        "after_each": 0,
+      });
 
-    before(() => {
+    before(() =>
+      delay(() =>
+        hooks :=
+          {"before": true, "before_each": 0, "after": false, "after_each": 0}
+      )
+    );
+
+    before_each(() =>
       delay(() => {
-        hooks := {"before": true, "before_each": 0, "after": false, "after_each": 0 };
-      }); 
-    });
+        let hooks' = hooks^;
+        hooks :=
+          {
+            "before": hooks'##before,
+            "before_each": hooks'##before_each + 1,
+            "after": hooks'##after,
+            "after_each": hooks'##after_each,
+          };
+      })
+    );
 
-    before_each(() => {
+    it("is the first test", () =>
+      empty()
+    );
+    it("is the second test", () =>
+      empty()
+    );
+    it("is the third test", () =>
+      empty()
+    );
+
+    after_each(() =>
       delay(() => {
-        hooks := {
-          "before": (hooks^)##before, "before_each": (hooks^)##before_each + 1,
-          "after":  (hooks^)##after,  "after_each":  (hooks^)##after_each
-        };
-      }); 
-    });
+        let hooks' = hooks^;
+        hooks :=
+          {
+            "before": hooks'##before,
+            "before_each": hooks'##before_each,
+            "after": hooks'##after,
+            "after_each": hooks'##after_each + 1,
+          };
+      })
+    );
 
-    it("is the first test",  () => empty());
-    it("is the second test", () => empty());
-    it("is the third test",  () => empty());
-
-    after_each(() => {
+    after(() =>
       delay(() => {
-        hooks := {
-          "before": (hooks^)##before, "before_each": (hooks^)##before_each,
-          "after":  (hooks^)##after,  "after_each":  (hooks^)##after_each + 1
-        };
-      }); 
-    });
+        let hooks' = hooks^;
+        hooks :=
+          {
+            "before": hooks'##before,
+            "before_each": hooks'##before_each,
+            "after": true,
+            "after_each": hooks'##after_each,
+          };
 
-    after(() => {
-      delay(() => {
-        hooks := {
-          "before": (hooks^)##before, "before_each": (hooks^)##before_each,
-          "after":  true,             "after_each":  (hooks^)##after_each
-        };
-        Assert.ok((hooks^)##before);
-        Assert.equal((hooks^)##before_each, 3);
-        Assert.equal((hooks^)##after_each, 3);
-        Assert.ok((hooks^)##after);
-      }); 
-    });
+        /* TODO: this is pretty ugly, caused by (facebook/reason issue #2108) */
+        let hooks'' = hooks^;
+        Assert.ok(hooks''##before);
+        Assert.equal(hooks''##before_each, 3);
+        Assert.equal(hooks''##after_each, 3);
+        Assert.ok(hooks''##after);
+      })
+    );
   });
 
   describe("Timeout", () => {
-    it_skip("should time out", ~timeout=50, () => {
-      Js.Promise.make((~resolve, ~reject as _) => {
-        Js.Global.setTimeout(() => [@bs] resolve(true), 51) |> ignore;
-      });
-    });
+    it_skip("should time out", ~timeout=50, () =>
+      Js.Promise.make((~resolve, ~reject as _) =>
+        Js.Global.setTimeout(() => resolve(. true), 51) |> ignore
+      )
+    );
 
-    it("should not time out", ~timeout=50, () => {
-      Js.Promise.make((~resolve, ~reject as _) => {
-        Js.Global.setTimeout(() => [@bs] resolve(true), 40) |> ignore;
-      });
-    });
+    it("should not time out", ~timeout=50, () =>
+      Js.Promise.make((~resolve, ~reject as _) =>
+        Js.Global.setTimeout(() => resolve(. true), 40) |> ignore
+      )
+    );
   });
 
   describe("Retries", () => {
     let retry_count = ref(0);
-    it("should succeed", ~retries=2, () => {
+    it("should succeed", ~retries=2, () =>
       Js.Promise.make((~resolve, ~reject as _) => {
         retry_count := retry_count^ + 1;
         Assert.ok(retry_count^ == 1);
-        [@bs] resolve(true) 
-      });
-    });
+        resolve(. true);
+      })
+    );
 
-    it_skip("should fail", ~retries=3, () => {
+    it_skip("should fail", ~retries=3, () =>
       Js.Promise.make((~resolve, ~reject as _) => {
         retry_count := retry_count^ + 1;
         Assert.ok(retry_count^ == 6);
-        [@bs] resolve(true) 
-      });
-    });
+        resolve(. true);
+      })
+    );
   });
 
-  describe("Slow", () => {
-    it("should be considered slow", ~slow=50, () => {
-      Js.Promise.make((~resolve, ~reject as _) => {
-        Js.Global.setTimeout(() => [@bs] resolve(true), 60) |> ignore;
-      });
-    });
-  });
+  describe("Slow", () =>
+    it("should be considered slow", ~slow=50, () =>
+      Js.Promise.make((~resolve, ~reject as _) =>
+        Js.Global.setTimeout(() => resolve(. true), 60) |> ignore
+      )
+    )
+  );
 });
