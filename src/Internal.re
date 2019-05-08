@@ -31,88 +31,88 @@ module Fn_Type = {
 
 /* Mocha bindings on `this` for `describe` and `it` functions */
 module This = {
-  [@bs.send] external timeout : (mocha, int) => unit = "timeout";
-  [@bs.send] external retries : (mocha, int) => unit = "retries";
-  [@bs.send] external slow : (mocha, int) => unit = "slow";
-  [@bs.send] external skip : (mocha, unit) => unit = "skip";
+  [@bs.send] external timeout: (mocha, int) => unit = "timeout";
+  [@bs.send] external retries: (mocha, int) => unit = "retries";
+  [@bs.send] external slow: (mocha, int) => unit = "slow";
+  [@bs.send] external skip: (mocha, unit) => unit = "skip";
 };
 
 module Sync = {
   [@bs.val]
-  external describe :
+  external describe:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "describe";
   [@bs.val]
-  external describe_only :
+  external describe_only:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "describe.only";
   [@bs.val]
-  external describe_skip :
+  external describe_skip:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "describe.skip";
   [@bs.val]
-  external it :
+  external it:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "it";
   [@bs.val]
-  external it_only :
+  external it_only:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "it.only";
   [@bs.val]
-  external it_skip :
+  external it_skip:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "it.skip";
   [@bs.val]
-  external before :
+  external before:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "before";
   [@bs.val]
-  external after :
+  external after:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "after";
   [@bs.val]
-  external before_each :
+  external before_each:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "beforeEach";
   [@bs.val]
-  external after_each :
+  external after_each:
     (~description: string=?, [@bs.this] ((mocha, unit) => unit)) => unit =
     "afterEach";
 };
 
 module Async = {
   [@bs.val]
-  external it :
+  external it:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "it";
   [@bs.val]
-  external it_only :
+  external it_only:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "it.only";
   [@bs.val]
-  external it_skip :
+  external it_skip:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "it.skip";
   [@bs.val]
-  external before :
+  external before:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "before";
   [@bs.val]
-  external after :
+  external after:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "after";
   [@bs.val]
-  external before_each :
+  external before_each:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "beforeEach";
   [@bs.val]
-  external after_each :
+  external after_each:
     (~description: string=?, [@bs.this] ((mocha, done_callback) => unit)) =>
     unit =
     "afterEach";
@@ -120,7 +120,7 @@ module Async = {
 
 module Promise = {
   [@bs.val]
-  external it :
+  external it:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -128,7 +128,7 @@ module Promise = {
     unit =
     "it";
   [@bs.val]
-  external it_only :
+  external it_only:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -136,7 +136,7 @@ module Promise = {
     unit =
     "it.only";
   [@bs.val]
-  external it_skip :
+  external it_skip:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -144,7 +144,7 @@ module Promise = {
     unit =
     "it.skip";
   [@bs.val]
-  external before :
+  external before:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -152,7 +152,7 @@ module Promise = {
     unit =
     "before";
   [@bs.val]
-  external after :
+  external after:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -160,7 +160,7 @@ module Promise = {
     unit =
     "after";
   [@bs.val]
-  external before_each :
+  external before_each:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
@@ -168,7 +168,7 @@ module Promise = {
     unit =
     "beforeEach";
   [@bs.val]
-  external after_each :
+  external after_each:
     (
       ~description: string=?,
       [@bs.this] ((mocha, unit) => Js.Promise.t('a))
