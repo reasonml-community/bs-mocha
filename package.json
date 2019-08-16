@@ -1,6 +1,6 @@
 {
   "name": "bs-mocha",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Bucklescript bindings for mocha",
   "repository": {
     "type": "git",
