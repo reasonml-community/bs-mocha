@@ -11,6 +11,7 @@ npm install bs-mocha --save-dev
 ## Usage 
 
 ```reason
+open BsMocha;
 let (it', it_skip') = Async.(it, it_skip);
 open Mocha;
 
